@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <Authors>Kenneth Ito</Authors>
+    <Company />
+    <Description>Akka.NET Split Brain Resolver</Description>
+    <Product />
+    <PackageProjectUrl>https://github.com/kennethito/Akka.Cluster.SplitBrainResolver</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kennethito/Akka.Cluster.SplitBrainResolver</RepositoryUrl>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Akka.Cluster">
+      <Version>1.3.2-beta439</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+  </ItemGroup>
+
+</Project>
