@@ -88,7 +88,7 @@ Task("Push")
     .Does(() =>
     {
         // Get the path to the package.
-        var package = "../artifacts/*.nupkg";
+        var package = $"../artifacts/Akka.Cluster.SplitBrainResolver.{semVersion}.nupkg";
 
         // Push the package.
         NuGetPush(package, new NuGetPushSettings {
