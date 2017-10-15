@@ -1,0 +1,1 @@
+# Akka.NET Split Brain Resolver
