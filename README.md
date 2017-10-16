@@ -25,7 +25,7 @@ Configure the downing provider class and split-brain-resolver section similar to
                 }
             }
             cluster {
-				auto-down-unreachable-after = off
+                auto-down-unreachable-after = off
 
                 downing-provider-class = "Akka.Cluster.SplitBrainResolver.SplitBrainDowningProvider, Akka.Cluster.SplitBrainResolver"
 
@@ -39,6 +39,6 @@ Configure the downing provider class and split-brain-resolver section similar to
                     stable-after = 20s
                 }
 
-				seed-nodes = ["akka.tcp://test-system@localhost:8001"]
+                seed-nodes = ["akka.tcp://test-system@localhost:8001"]
             }
         }
