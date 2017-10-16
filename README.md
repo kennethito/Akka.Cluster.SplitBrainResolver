@@ -25,7 +25,7 @@ Configure the downing provider class and split-brain-resolver section similar to
                 }
             }
             cluster {
-				auto-down-unreachable-after = off
+                auto-down-unreachable-after = off
 
                 downing-provider-class = "Akka.Cluster.SplitBrainResolver.SplitBrainDowningProvider, Akka.Cluster.SplitBrainResolver"
 
@@ -39,6 +39,19 @@ Configure the downing provider class and split-brain-resolver section similar to
                     stable-after = 20s
                 }
 
-				seed-nodes = ["akka.tcp://test-system@localhost:8001"]
+                seed-nodes = ["akka.tcp://test-system@localhost:8001"]
             }
         }
+
+## Building
+
+Pre-requsites
+
+1. [Nuget](https://docs.microsoft.com/en-us/nuget/guides/install-nuget) on your path
+2. [Dotnet core sdk 2.0+](https://www.microsoft.com/net/core#windowscmd)
+3. Visual studio 2017.3+ (Potentially optional, but untested)
+
+Building via dotnet has several alternatives
+
+* dotnet build from the repository root
+* build.ps1 from the repository root (used via CI)
