@@ -1,7 +1,10 @@
 # Akka.NET Split Brain Resolver
-
-[![Build status](https://ci.appveyor.com/api/projects/status/ty8ftchtmfes58eu/branch/master?svg=true)](https://ci.appveyor.com/project/kennethito/akka-cluster-splitbrainresolver)
-[![Nuget version](https://img.shields.io/nuget/v/Akka.Cluster.SplitBrainResolver.svg)](https://www.nuget.org/packages/Akka.Cluster.SplitBrainResolver)
+|Status||
+|:--:|:--:| 
+[![Build status](https://ci.appveyor.com/api/projects/status/ty8ftchtmfes58eu/branch/master?svg=true)](https://ci.appveyor.com/project/kennethito/akka-cluster-splitbrainresolver/branch/master) |master|
+| [![Build status](https://ci.appveyor.com/api/projects/status/ty8ftchtmfes58eu/branch/dev?svg=true)](https://ci.appveyor.com/project/kennethito/akka-cluster-splitbrainresolver/branch/dev) |dev|
+| [![Nuget stable version](https://img.shields.io/nuget/v/Akka.Cluster.SplitBrainResolver.svg)](https://www.nuget.org/packages/Akka.Cluster.SplitBrainResolver) |Stable|
+| [![Nuget prerelease version](https://img.shields.io/nuget/vpre/Akka.Cluster.SplitBrainResolver.svg)](https://www.nuget.org/packages/Akka.Cluster.SplitBrainResolver) |Prerelease|
 
 This project initially aims to reproduce functionality found in the [JVM Split Brain Resolver](https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html).  
 The JVM akka doc previously linked should be considered an accurate description for this project as well, including for hocon configuration.
@@ -11,6 +14,7 @@ This is a work in progress.
 Currently only the following are implemented.
 
 * [Static Quorum](https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Static_Quorum)
+* [Keep Referee](https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Keep_Referee)
 
 ## Configuration
 
