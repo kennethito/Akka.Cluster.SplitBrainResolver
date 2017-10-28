@@ -27,7 +27,8 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
 
             var victims = strategy.GetVictims(clusterState);
 
-            victims.Count().Should().Be(2, "Partitions with fewer than the quorum size should be marked for downing");
+            victims.ToImmutableHashSet().SetEquals(members)
+                .Should().BeTrue("Partitions with fewer than the quorum size should be marked for downing");
         }
 
         [Fact]
@@ -36,46 +37,52 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
             string roleName = "SomeRole";
             var roles = new string[] { roleName }.ToImmutableHashSet();
 
+            var membersInRole = TestUtils.CreateMembers(MemberStatus.Up, roles).Take(2).ToList();
+            var members =
+                TestUtils.CreateMembers(MemberStatus.Up)
+                    .Take(3)
+                    .Concat(membersInRole)
+                    .ToImmutableSortedSet();
+
+            var clusterState = new CurrentClusterState().Copy(members);
+
             var strategy = new StaticQuorumDowningStrategy(quorumSize: 3, role: roleName);
-
-            var members = TestUtils.CreateMembers(MemberStatus.Up).Take(3);
-            var membersInRole = TestUtils.CreateMembers(MemberStatus.Up, roles).Take(2);
-
-            var clusterState =
-                new CurrentClusterState()
-                .Copy(members: members.Concat(membersInRole).ToImmutableSortedSet());
-
             var victims = strategy.GetVictims(clusterState);
 
-            victims.Count().Should().Be(2, "Partitions with fewer than the quorum size should be marked for downing");
-            victims.All(v => v.HasRole(roleName)).Should().BeTrue("We should only down members in the specified role");
+            victims.ToImmutableHashSet().SetEquals(membersInRole.ToImmutableHashSet())
+                .Should().BeTrue("Partitions with fewer than the quorum size should be marked for downing");
+
+            victims.All(v => v.HasRole(roleName))
+                .Should().BeTrue("We should only down members in the specified role");
         }
 
         [Fact]
         public void ShouldDownPartitionsWithTooFewAvailableMembers()
         {
-            var strategy = new StaticQuorumDowningStrategy(quorumSize: 3);
-
             var members = TestUtils.CreateMembers(MemberStatus.Up).Take(3).ToImmutableSortedSet();
             var unreachableMembers = members.Take(1).ToImmutableHashSet();
 
             var clusterState =
                 new CurrentClusterState()
-                .Copy(members: members, unreachable: unreachableMembers);
+                    .Copy(members, unreachableMembers);
 
+            var strategy = new StaticQuorumDowningStrategy(quorumSize: 3);
             var victims = strategy.GetVictims(clusterState);
 
-            victims.Count().Should().Be(3, "Partitions with fewer available members than the quorum size should be marked for downing");
+            victims.ToImmutableHashSet().SetEquals(members)
+                .Should().BeTrue("Partitions with fewer available members than the quorum size should be marked for downing");
         }
 
         [Fact]
         public void ShouldNotDownPartitionsWithEnoughMembers()
         {
-            var strategy = new StaticQuorumDowningStrategy(quorumSize: 3);
+            var members = TestUtils.CreateMembers(MemberStatus.Up).Take(3).ToImmutableSortedSet();
+
             var clusterState = 
                 new CurrentClusterState()
-                .Copy(members: TestUtils.CreateMembers(MemberStatus.Up).Take(3).ToImmutableSortedSet());
+                    .Copy(members);
 
+            var strategy = new StaticQuorumDowningStrategy(quorumSize: 3);
             var victims = strategy.GetVictims(clusterState);
 
             victims.Count().Should().Be(0, "Partitions with quorum size or greater should not be marked for downing");
@@ -87,39 +94,36 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
             string roleName = "SomeRole";
             var roles = new string[] { roleName }.ToImmutableHashSet();
 
+            var membersInRole = TestUtils.CreateMembers(MemberStatus.Up, roles).Take(3).ToList();
+            var members =
+                TestUtils.CreateMembers(MemberStatus.Up)
+                    .Take(2)
+                    .Concat(membersInRole)
+                    .ToImmutableSortedSet();
+
+            var clusterState = new CurrentClusterState().Copy(members);
+
             var strategy = new StaticQuorumDowningStrategy(quorumSize: 3, role: roleName);
-
-            var members = TestUtils.CreateMembers(MemberStatus.Up).Take(2);
-            var membersInRole = TestUtils.CreateMembers(MemberStatus.Up, roles).Take(3);
-
-            var clusterState =
-                new CurrentClusterState()
-                .Copy(members: members.Concat(membersInRole).ToImmutableSortedSet());
-
             var victims = strategy.GetVictims(clusterState);
 
             victims.Count().Should().Be(0, "Partitions with fewer than the quorum size should be marked for downing");
         }
 
         [Fact]
-        public void ShouldDownUnreachablesInMajorityPartition()
+        public void ShouldDownUnreachablesWhenEnoughAvailableMembers()
         {
-            var strategy = new StaticQuorumDowningStrategy(quorumSize: 3);
-
             var members = TestUtils.CreateMembers(MemberStatus.Up).Take(5).ToImmutableSortedSet();
             var unreachableMembers = members.Take(2).ToImmutableHashSet();
 
             var clusterState =
                 new CurrentClusterState()
-                .Copy(members: members, unreachable: unreachableMembers);
+                    .Copy(members: members, unreachable: unreachableMembers);
 
+            var strategy = new StaticQuorumDowningStrategy(quorumSize: 3);
             var victims = strategy.GetVictims(clusterState).ToList();
 
-            victims.Count().Should().Be(2, "Partitions with available members >= quorum size should down unreachable members");
-
-            string msg = "Only unreachable members should be downed";
-            unreachableMembers.Contains(victims[0]).Should().BeTrue(msg);
-            unreachableMembers.Contains(victims[1]).Should().BeTrue(msg);
+            victims.ToImmutableHashSet().SetEquals(unreachableMembers)
+                .Should().BeTrue("Partitions with available members >= quorum size should down unreachable members");
         }
     }
 }

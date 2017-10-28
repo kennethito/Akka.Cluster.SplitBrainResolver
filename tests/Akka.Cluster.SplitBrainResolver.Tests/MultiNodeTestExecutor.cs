@@ -29,7 +29,7 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
                 Path.Combine(
                     Directory.GetCurrentDirectory(),
                     mntrRoot, 
-                    "Akka.MultiNodeTestRunner.1.3.2-beta439", "lib", "net452");
+                    "Akka.MultiNodeTestRunner.1.3.2", "lib", "net452");
 
             string mntrPath = Path.Combine(mntrDir, "Akka.MultiNodeTestRunner.exe");
 
