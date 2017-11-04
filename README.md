@@ -13,9 +13,9 @@ This is a work in progress.
 
 Currently only the following are implemented.
 
-* [Static Quorum]	(https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Static_Quorum)
-* [Keep Referee]	(https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Keep_Referee)
-* [Keep Majority]	(https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Keep_Majority)
+* [Static Quorum](https://developer.lightbend.com/docs/akka-commercial-addons/current/split-brain-resolver.html#static-quorum)
+* [Keep Referee](https://developer.lightbend.com/docs/akka-commercial-addons/current/split-brain-resolver.html#keep-referee)
+* [Keep Majority](https://developer.lightbend.com/docs/akka-commercial-addons/current/split-brain-resolver.html#keep-majority)
 
 ## Configuration
 
