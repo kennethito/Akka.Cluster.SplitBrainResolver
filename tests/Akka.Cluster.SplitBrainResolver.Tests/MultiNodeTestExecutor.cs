@@ -7,6 +7,7 @@ using Xunit;
 using Medallion.Shell;
 using Xunit.Abstractions;
 using System.IO;
+using FluentAssertions;
 
 namespace Akka.Cluster.SplitBrainResolver.Tests
 {
@@ -23,20 +24,21 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
         public async Task RunMultiNodeTests()
         {
             string mntrRoot = "mntr";
-            await RestoreMultiNodeTestRunner(mntrRoot);
 
             string mntrDir = 
                 Path.Combine(
                     Directory.GetCurrentDirectory(),
                     mntrRoot, 
-                    "Akka.MultiNodeTestRunner.1.3.2-beta439", "lib", "net452");
+                    "Akka.MultiNodeTestRunner.1.3.2", "lib", "net452");
 
             string mntrPath = Path.Combine(mntrDir, "Akka.MultiNodeTestRunner.exe");
+
+            await RestoreMultiNodeTestRunner(mntrRoot);
 
             string testAssemblyPath =
                 Path.Combine(
                     Directory.GetCurrentDirectory(),
-                    "Akka.Cluster.SplitBrainResolver.Tests.exe");
+                    "Akka.Cluster.SplitBrainResolver.Tests.dll");
 
             _output.WriteLine("Executing multinode tests");
             _output.WriteLine($"MultiNodeTestRunner path: {mntrPath}");
@@ -54,11 +56,23 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
                         options.WorkingDirectory(mntrDir);
                     });
 
-            _output.WriteLine(await testCommand.StandardOutput.ReadToEndAsync());
-            _output.WriteLine(await testCommand.StandardError.ReadToEndAsync());
+            var output = await testCommand.StandardOutput.ReadToEndAsync();
+            var error = await testCommand.StandardError.ReadToEndAsync();
+
+            _output.WriteLine(output);
+            _output.WriteLine(error);
+
             await testCommand.Task;
 
-            Assert.True(testCommand.Result.Success, "MultiNodeTests have failed");
+            testCommand.Result.Success.Should().BeTrue("MultiNodeTests have failed");
+            error.Should().BeNullOrEmpty(error);
+
+            output
+                //DeathPactException is normal
+                .Replace("Akka.Actor.DeathPactException", string.Empty)
+                //Discovery related exceptions result in process success, so look for them explicitly
+                .IndexOf("exception", StringComparison.OrdinalIgnoreCase) 
+                .Should().BeNegative($"There should be no exceptions: {output}");
         }
 
         private async Task RestoreMultiNodeTestRunner(string relativePath)

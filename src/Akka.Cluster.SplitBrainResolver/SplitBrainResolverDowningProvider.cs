@@ -27,6 +27,12 @@ namespace Akka.Cluster.SplitBrainResolver
                 case "static-quorum":
                     strategy = new StaticQuorumDowningStrategy(config);
                     break;
+                case "keep-referee":
+                    strategy = new KeepRefereeDowningStrategy(config);
+                    break;
+                case "keep-majority":
+                    strategy = new KeepMajorityDowningStrategy(config);
+                    break;
                 case "off":
                     strategy = new NoopDowningStrategy();
                     break;

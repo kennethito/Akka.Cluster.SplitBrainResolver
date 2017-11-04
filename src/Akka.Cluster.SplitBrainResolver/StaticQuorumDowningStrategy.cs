@@ -48,20 +48,15 @@ namespace Akka.Cluster.SplitBrainResolver
 
         public IEnumerable<Member> GetVictims(CurrentClusterState clusterState)
         {
-            bool ShouldConsider(Member member) => 
-                string.IsNullOrWhiteSpace(role) 
-                    ? member.Status == MemberStatus.Up
-                    : member.Status == MemberStatus.Up && member.HasRole(role);
+                var members = clusterState.GetMembers(this.role);
+            var unreachable = clusterState.GetUnreachableMembers(this.role);
+            int availableCount = members.Count - unreachable.Count;
 
-            int members = clusterState.Members.Where(ShouldConsider).Count();
-            int unreachable = clusterState.Unreachable.Where(ShouldConsider).Count();
-            int available = members - unreachable;
-
-            return available < quorumSize
+            return availableCount < quorumSize
                 //too few available, down our partition
-                ? clusterState.Members.Where(ShouldConsider).ToList()
+                ? members
                 //enough available, down unreachable
-                : clusterState.Unreachable.Where(ShouldConsider).ToList();
+                : unreachable;
         }
     }
 }

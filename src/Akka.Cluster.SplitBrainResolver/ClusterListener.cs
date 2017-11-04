@@ -48,7 +48,7 @@ namespace Akka.Cluster.SplitBrainResolver
 
             if (clusterState.Leader != null && clusterState.Leader.Equals(cluster.SelfAddress))
             {
-                log.Info($"Checking downing strategy for leader {clusterState.Leader} on node {cluster.SelfAddress}");
+                log.Info($"Checking downing strategy {downingStrategy.GetType().Name} for leader {clusterState.Leader} on node {cluster.SelfAddress}");
 
                 foreach (var victim in downingStrategy.GetVictims(clusterState))
                 {
