@@ -13,8 +13,9 @@ This is a work in progress.
 
 Currently only the following are implemented.
 
-* [Static Quorum](https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Static_Quorum)
-* [Keep Referee](https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Keep_Referee)
+* [Static Quorum]	(https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Static_Quorum)
+* [Keep Referee]	(https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Keep_Referee)
+* [Keep Majority]	(https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html#Keep_Majority)
 
 ## Configuration
 

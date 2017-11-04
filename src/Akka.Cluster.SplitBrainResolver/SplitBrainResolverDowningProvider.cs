@@ -29,7 +29,10 @@ namespace Akka.Cluster.SplitBrainResolver
                     break;
                 case "keep-referee":
                     strategy = new KeepRefereeDowningStrategy(config);
-                    break;                    
+                    break;
+                case "keep-majority":
+                    strategy = new KeepMajorityDowningStrategy(config);
+                    break;
                 case "off":
                     strategy = new NoopDowningStrategy();
                     break;
