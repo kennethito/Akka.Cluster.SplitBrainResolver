@@ -3,11 +3,7 @@
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-    <TargetFrameworks>net462</TargetFrameworks>
-    <ApplicationIcon />
-    <OutputTypeEx>exe</OutputTypeEx>
-    <StartupObject></StartupObject>
-    <OutputType>Exe</OutputType>
+    <TargetFramework>net462</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,10 +11,10 @@
     <PackageReference Include="FluentAssertions" Version="4.19.4" />
     <PackageReference Include="MedallionShell" Version="1.5.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
-    <PackageReference Include="Moq" Version="4.7.127" />
+    <PackageReference Include="Moq" Version="4.7.142" />
     <PackageReference Include="System.Runtime" Version="4.3.0" />
-    <PackageReference Include="xunit" Version="2.3.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
   </ItemGroup>
 
   <ItemGroup>
