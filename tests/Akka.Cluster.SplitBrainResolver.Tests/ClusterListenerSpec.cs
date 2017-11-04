@@ -28,14 +28,27 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
             Fourth = Role("fourth");
             Fifth = Role("fifth");
 
+            //Logfiles will be found at
+            // \Akka.Cluster.SplitBrainResolver\tests\Akka.Cluster.SplitBrainResolver.Tests\bin\Debug\net452\
+            //      mntr\Akka.MultiNodeTestRunner.1.3.2\lib\net452\Akka.Cluster.SplitBrainResolver.Tests.ClusterListenerSpec
+            bool enabledVerboseLogging = false;
+
             CommonConfig =
                 MultiNodeLoggingConfig.LoggingConfig
-                    .WithFallback(DebugConfig(false))
-                    .WithFallback(ConfigurationFactory.ParseString(
-                        @"akka.cluster.downing-provider-class = 
-                            ""Akka.Cluster.SplitBrainResolver.Tests.ClusterListenerDowningProvider, 
-                              Akka.Cluster.SplitBrainResolver.Tests"""
-                    ))
+                    .WithFallback(DebugConfig(enabledVerboseLogging))
+                    .WithFallback(ConfigurationFactory.ParseString(@"
+                         akka {
+                             cluster {
+                                 downing-provider-class = 
+                                    ""Akka.Cluster.SplitBrainResolver.Tests.ClusterListenerDowningProvider, 
+                                      Akka.Cluster.SplitBrainResolver.Tests""
+                                 split-brain-resolver {
+                                     stable-after = 1s
+                                 }
+                                 auto-down-unreachable-after = off
+                             }
+                         }
+                     "))
                     .WithFallback(MultiNodeClusterSpec.ClusterConfig(true));
 
             TestTransport = true;
