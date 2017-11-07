@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Akka.Actor;
@@ -45,6 +46,21 @@ namespace Akka.Cluster.SplitBrainResolver
 
             return state.Members.Where(ShouldConsider)
                 .ToImmutableHashSet();
+        }
+
+        public static ImmutableSortedSet<Member> SortByAge(this IEnumerable<Member> members)
+        {
+            return members.ToImmutableSortedSet(new AgeComparer());
+        }
+
+        private class AgeComparer : IComparer<Member>
+        {
+            public int Compare(Member a, Member b)
+            {
+                if (a.Equals(b)) return 0;
+                if (a.IsOlderThan(b)) return -1;
+                return 1;
+            }
         }
     }
 }

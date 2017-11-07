@@ -33,6 +33,9 @@ namespace Akka.Cluster.SplitBrainResolver
                 case "keep-majority":
                     strategy = new KeepMajorityDowningStrategy(config);
                     break;
+                case "keep-oldest":
+                    strategy = new KeepOldestDowningStrategy(config);
+                    break;
                 case "off":
                     strategy = new NoopDowningStrategy();
                     break;
