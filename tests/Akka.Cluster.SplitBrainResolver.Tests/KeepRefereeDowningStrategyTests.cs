@@ -6,11 +6,26 @@ using System.Collections.Generic;
 using static Akka.Cluster.ClusterEvent;
 using FluentAssertions;
 using Xunit;
+using Akka.Configuration;
 
 namespace Akka.Cluster.SplitBrainResolver
 {
     public class KeepRefereeDowningStrategyTests
     {
+        [Fact]
+        public void ShouldParseConfig()
+        {
+            var address = Address.Parse("akka.tcp://system@hostname:1234");
+
+            var config = ConfigurationFactory.ParseString(string.Format(@"
+                akka.cluster.split-brain-resolver.keep-referee.address = ""{0}""
+                akka.cluster.split-brain-resolver.keep-referee.down-all-if-less-than-nodes = 10", address.ToString()));
+            var strategy = new KeepRefereeDowningStrategy(config);
+
+            strategy.Address.Should().Be(address);
+            strategy.DownAllIfLessThanNodes.Should().Be(10);
+        }
+        
         [Fact]
         public void ShouldDownUnreachableInPartitionsWithReferee()
         {

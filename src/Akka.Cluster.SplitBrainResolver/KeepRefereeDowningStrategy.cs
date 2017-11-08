@@ -18,8 +18,8 @@ namespace Akka.Cluster.SplitBrainResolver
     /// </summary>
     public sealed class KeepRefereeDowningStrategy : IDowningStrategy
     {
-        private readonly Address address;
-        private readonly int downAllIfLessThanNodes;
+        public Address Address { get; }
+        public int DownAllIfLessThanNodes { get; }
 
         public KeepRefereeDowningStrategy(string address, int downAllIfLessThanNodes)
         {
@@ -27,8 +27,8 @@ namespace Akka.Cluster.SplitBrainResolver
                 throw new ArgumentNullException(nameof(address));
 
             //akka.tcp://system@hostname:port
-            this.address = Address.Parse(address);
-            this.downAllIfLessThanNodes = downAllIfLessThanNodes;
+            Address = Address.Parse(address);
+            DownAllIfLessThanNodes = downAllIfLessThanNodes;
         }
 
         /// <summary>
@@ -48,9 +48,9 @@ namespace Akka.Cluster.SplitBrainResolver
 
         public IEnumerable<Member> GetVictims(CurrentClusterState clusterState)
         {
-            bool haveReferee = clusterState.HasAvailableMember(this.address);
+            bool haveReferee = clusterState.HasAvailableMember(Address);
 
-            return !haveReferee || clusterState.GetAvailableMembers().Count < this.downAllIfLessThanNodes
+            return !haveReferee || clusterState.GetAvailableMembers().Count < DownAllIfLessThanNodes
                 ? clusterState.GetMembers()
                 : clusterState.GetUnreachableMembers();
         }

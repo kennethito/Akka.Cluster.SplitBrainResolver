@@ -7,11 +7,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using static Akka.Cluster.ClusterEvent;
+using Akka.Configuration;
 
 namespace Akka.Cluster.SplitBrainResolver.Tests
 {
     public class KeepMajorityDowningStrategyTests
     {
+        [Fact]
+        public void ShouldParseConfig()
+        {
+            var config = ConfigurationFactory.ParseString("akka.cluster.split-brain-resolver.keep-majority.role = \"test\"");
+            var strategy = new KeepMajorityDowningStrategy(config);
+
+            strategy.Role.Should().Be("test");
+        }
+
         [Fact]
         public void ShouldDownMinorityPartitions()
         {
