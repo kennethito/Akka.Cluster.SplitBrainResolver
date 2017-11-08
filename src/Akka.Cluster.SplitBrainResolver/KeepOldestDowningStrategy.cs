@@ -7,13 +7,13 @@ namespace Akka.Cluster.SplitBrainResolver
 {
     public sealed class KeepOldestDowningStrategy : IDowningStrategy
     {
-        private readonly string role;
-        private readonly bool downIfAlone;
+        public string Role { get; }
+        public bool DownIfAlone { get; }
 
         public KeepOldestDowningStrategy(string role = null, bool downIfAlone = false)
         {
-            this.role = role;
-            this.downIfAlone = downIfAlone;
+            Role = role;
+            DownIfAlone = downIfAlone;
         }
 
         /// <summary>
@@ -33,22 +33,22 @@ namespace Akka.Cluster.SplitBrainResolver
 
         public IEnumerable<Member> GetVictims(CurrentClusterState clusterState)
         {
-            var oldest = clusterState.GetMembers(this.role).SortByAge().FirstOrDefault();
-            var available = clusterState.GetAvailableMembers(this.role);
+            var oldest = clusterState.GetMembers(Role).SortByAge().FirstOrDefault();
+            var available = clusterState.GetAvailableMembers(Role);
             var haveOldest = available.Contains(oldest);
             var oldestIsAlone =
                 (haveOldest && available.Count == 1)
-                || (!haveOldest && available.Count == clusterState.GetMembers(this.role).Count - 1);
+                || (!haveOldest && available.Count == clusterState.GetMembers(Role).Count - 1);
 
             if(oldest == null)
                 return Enumerable.Empty<Member>();
 
-            if(oldestIsAlone && this.downIfAlone)
+            if(oldestIsAlone && DownIfAlone)
                 return new List<Member> { oldest };
 
             return haveOldest
-                ? clusterState.GetUnreachableMembers(this.role)
-                : clusterState.GetMembers(this.role);
+                ? clusterState.GetUnreachableMembers(Role)
+                : clusterState.GetMembers(Role);
         }
     }
 }

@@ -9,16 +9,16 @@ namespace Akka.Cluster.SplitBrainResolver
 {
     public sealed class KeepMajorityDowningStrategy : IDowningStrategy
     {
-        private readonly string role;
+        public string Role { get; }
 
         public KeepMajorityDowningStrategy(string role = null)
         {
-            this.role = role;
+            Role = role;
         }
 
         public KeepMajorityDowningStrategy(Config config)
             : this(
-                role: config.GetString("akka.cluster.split-brain-resolver.keep-majority"))
+                role: config.GetString("akka.cluster.split-brain-resolver.keep-majority.role"))
         {
         }
 
@@ -30,9 +30,9 @@ namespace Akka.Cluster.SplitBrainResolver
         /// </summary>
         public IEnumerable<Member> GetVictims(CurrentClusterState clusterState)
         {
-            var members = clusterState.GetMembers(role);
-            var unreachableMembers = clusterState.GetUnreachableMembers(role);
-            var availableMembers = clusterState.GetAvailableMembers(role);
+            var members = clusterState.GetMembers(Role);
+            var unreachableMembers = clusterState.GetUnreachableMembers(Role);
+            var availableMembers = clusterState.GetAvailableMembers(Role);
 
             int unreachableCount = unreachableMembers.Count;
             int availableCount = availableMembers.Count;

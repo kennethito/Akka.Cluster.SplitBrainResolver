@@ -6,11 +6,24 @@ using System.Collections.Generic;
 using static Akka.Cluster.ClusterEvent;
 using FluentAssertions;
 using Xunit;
+using Akka.Configuration;
 
 namespace Akka.Cluster.SplitBrainResolver.Tests
 {
     public class KeepOldestDowningStrategyTests
     {
+        [Fact]
+        public void ShouldParseConfig()
+        {
+            var config = ConfigurationFactory.ParseString(@"
+                akka.cluster.split-brain-resolver.keep-oldest.role = ""test""
+                akka.cluster.split-brain-resolver.keep-oldest.down-if-alone = on");
+            var strategy = new KeepOldestDowningStrategy(config);
+
+            strategy.Role.Should().Be("test");
+            strategy.DownIfAlone.Should().BeTrue();
+        }
+
         [Fact]
         public void ShouldDownUnreachablesInOldestPartition()
         {

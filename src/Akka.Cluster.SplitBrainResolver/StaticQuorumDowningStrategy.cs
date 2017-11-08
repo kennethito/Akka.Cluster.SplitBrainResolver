@@ -17,8 +17,8 @@ namespace Akka.Cluster.SplitBrainResolver
     /// </summary>
     public sealed class StaticQuorumDowningStrategy : IDowningStrategy
     {
-        private readonly int quorumSize;
-        private readonly string role;
+        public int QuorumSize { get; }
+        public string Role { get; }
 
         /// <summary>
         /// Creates a StaticQuorumDowningStrategy
@@ -27,32 +27,32 @@ namespace Akka.Cluster.SplitBrainResolver
         /// <param name="role">Only consider nodes in this role. Will be ignored if null</param>
         public StaticQuorumDowningStrategy(int quorumSize, string role = null)
         {
-            this.quorumSize = quorumSize;
-            this.role = role;
+            QuorumSize = quorumSize;
+            Role = role;
         }
 
         /// <summary>
         /// Creates a StaticQuorumDowningStrategy getting quorumSize and role from config.
         /// Uses
-        ///     akka.cluster.split-brain-resolver.quorum-size
-        ///     akka.cluster.split-brain-resolver.role
+        ///     akka.cluster.split-brain-resolver.static-quorum.quorum-size
+        ///     akka.cluster.split-brain-resolver.static-quorum.role
         /// </summary>
         /// <param name="config"></param>
         public StaticQuorumDowningStrategy(Config config)
             : this(
-                quorumSize: config.GetInt("akka.cluster.split-brain-resolver.quorum-size"), 
-                role: config.GetString("akka.cluster.split-brain-resolver.role"))
+                quorumSize: config.GetInt("akka.cluster.split-brain-resolver.static-quorum.quorum-size"), 
+                role: config.GetString("akka.cluster.split-brain-resolver.static-quorum.role"))
         {
 
         }
 
         public IEnumerable<Member> GetVictims(CurrentClusterState clusterState)
         {
-                var members = clusterState.GetMembers(this.role);
-            var unreachable = clusterState.GetUnreachableMembers(this.role);
+                var members = clusterState.GetMembers(Role);
+            var unreachable = clusterState.GetUnreachableMembers(Role);
             int availableCount = members.Count - unreachable.Count;
 
-            return availableCount < quorumSize
+            return availableCount < QuorumSize
                 //too few available, down our partition
                 ? members
                 //enough available, down unreachable

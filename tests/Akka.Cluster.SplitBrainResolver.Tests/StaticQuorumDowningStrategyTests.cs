@@ -9,11 +9,24 @@ using Xunit;
 using FluentAssertions;
 using System.Reflection;
 using static Akka.Cluster.ClusterEvent;
+using Akka.Configuration;
 
 namespace Akka.Cluster.SplitBrainResolver.Tests
 {
     public class StaticQuorumDowningStrategyTests
     {
+        [Fact]
+        public void ShouldParseConfig()
+        {
+            var config = ConfigurationFactory.ParseString(@"
+                akka.cluster.split-brain-resolver.static-quorum.role = ""test""
+                akka.cluster.split-brain-resolver.static-quorum.quorum-size = 3");
+            var strategy = new StaticQuorumDowningStrategy(config);
+
+            strategy.Role.Should().Be("test");
+            strategy.QuorumSize.Should().Be(3);
+        }
+
         [Fact]
         public void ShouldDownPartitionsWithTooFewMembers()
         {
