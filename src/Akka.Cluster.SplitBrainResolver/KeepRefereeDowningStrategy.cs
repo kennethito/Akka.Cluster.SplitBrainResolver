@@ -16,7 +16,7 @@ namespace Akka.Cluster.SplitBrainResolver
     /// cannot run without it. The drawback is that the referee node is a single point 
     /// of failure, by design. keep-referee will never result in two separate clusters.
     /// </summary>
-    public class KeepRefereeDowningStrategy : IDowningStrategy
+    public sealed class KeepRefereeDowningStrategy : IDowningStrategy
     {
         private readonly Address address;
         private readonly int downAllIfLessThanNodes;

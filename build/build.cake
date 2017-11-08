@@ -50,12 +50,12 @@ Task("Build")
     });
 
 Task("Test")
-    .IsDependentOn("Build")
     .Does(() =>
     {
         var settings = new DotNetCoreTestSettings
         {
-            Configuration = configuration
+            Configuration = configuration,
+            NoBuild = true
         };
 
         var projectFiles = GetFiles("../tests/**/*.csproj");
@@ -67,7 +67,6 @@ Task("Test")
     });
 
 Task("Pack")
-    .IsDependentOn("Build")
     .Does(() =>
     {
         var msBuildSettings = new DotNetCoreMSBuildSettings();
@@ -77,7 +76,8 @@ Task("Pack")
         {
             Configuration = configuration,
             OutputDirectory = "../artifacts",
-            MSBuildSettings = msBuildSettings
+            MSBuildSettings = msBuildSettings,
+            NoBuild = true
         };
 
         DotNetCorePack("../src/Akka.Cluster.SplitBrainResolver", settings);

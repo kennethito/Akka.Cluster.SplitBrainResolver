@@ -11,11 +11,14 @@ The JVM akka doc previously linked should be considered an accurate description 
 
 This is a work in progress. 
 
-Currently only the following are implemented.
+Currently only the JVM Split Brain Resolvers are implemented.
 
 * [Static Quorum](https://developer.lightbend.com/docs/akka-commercial-addons/current/split-brain-resolver.html#static-quorum)
 * [Keep Referee](https://developer.lightbend.com/docs/akka-commercial-addons/current/split-brain-resolver.html#keep-referee)
 * [Keep Majority](https://developer.lightbend.com/docs/akka-commercial-addons/current/split-brain-resolver.html#keep-majority)
+* [Keep Oldest](https://developer.lightbend.com/docs/akka-commercial-addons/current/split-brain-resolver.html#keep-oldest)
+
+In the future, further downing strategies will be provided.
 
 ## Configuration
 
