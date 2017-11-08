@@ -6,7 +6,7 @@
 | [![Nuget stable version](https://img.shields.io/nuget/v/Akka.Cluster.SplitBrainResolver.svg)](https://www.nuget.org/packages/Akka.Cluster.SplitBrainResolver) |Stable|
 | [![Nuget prerelease version](https://img.shields.io/nuget/vpre/Akka.Cluster.SplitBrainResolver.svg)](https://www.nuget.org/packages/Akka.Cluster.SplitBrainResolver) |Prerelease|
 
-This project initially aims to reproduce functionality found in the [JVM Split Brain Resolver](https://doc.akka.io/docs/akka/rp-15v01p05/scala/split-brain-resolver.html).  
+This project initially aims to reproduce functionality found in the [JVM Split Brain Resolver](https://developer.lightbend.com/docs/akka-commercial-addons/current/split-brain-resolver.html).  
 The JVM akka doc previously linked should be considered an accurate description for this project as well, including for hocon configuration.
 
 This is a work in progress. 
@@ -45,6 +45,46 @@ Configure the downing provider class and split-brain-resolver section similar to
                     # Decision is taken by the strategy when there has been no membership or
                     # reachability changes for this duration, i.e. the cluster state is stable.
                     stable-after = 20s
+
+                    # The strategy named static-quorum will down the unreachable nodes if the number 
+                    # of remaining nodes are greater than or equal to a configured quorum-size. 
+                    # Otherwise, it will down the reachable nodes
+                    static-quorum {
+                        # if the 'role' is defined the decision is based only on members with that 'role'
+                        role = ""
+                        # Minimum number of nodes that the cluster must have (not the total size)
+                        # Note that you must not add more members to the cluster than quorum-size * 2 - 1, 
+                        # because then both sides may down each other and thereby form two separate clusters
+                        quorum-size = 3
+                    }
+
+                    # The strategy named keep-majority will down the unreachable nodes if the current node is 
+                    # in the majority part based on the last known membership information. Otherwise down the 
+                    # reachable nodes, i.e. the own part. If the parts are of equal size the part containing 
+                    # the node with the lowest address is kept.
+                    keep-majority {
+                        # if the 'role' is defined the decision is based only on members with that 'role'
+                        role = ""
+                    }
+
+                    # The strategy named keep-oldest will down the part that does not contain the oldest member. 
+                    # The oldest member is interesting because the active Cluster Singleton instance is 
+                    # running on the oldest member.
+                    keep-oldest {
+                        # if the 'role' is defined the decision is based only on members with that 'role'
+                        role = ""
+                        # Enable downing of the oldest node when it is partitioned from all other nodes
+                        down-if-alone = off
+                    }
+
+                    # The strategy named keep-referee will down the part that does not contain the given referee node.
+                    keep-referee {
+                        # referee address on the form of "akka.tcp://system@hostname:port"
+                        address = ""
+                        # If the remaining number of nodes are less than the configured down-all-if-less-than-nodes 
+                        # all nodes will be downed. If the referee node itself is removed all nodes will be downed.
+                        down-all-if-less-than-nodes = 1
+                    }
                 }
 
                 seed-nodes = ["akka.tcp://test-system@localhost:8001"]
