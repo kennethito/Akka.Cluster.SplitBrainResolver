@@ -37,6 +37,19 @@ namespace Akka.Cluster.SplitBrainResolver
             int unreachableCount = unreachableMembers.Count;
             int availableCount = availableMembers.Count;
 
+            if (availableCount == unreachableCount)
+            {
+                var oldest = clusterState.GetMembers(Role).SortByAge().FirstOrDefault();
+                if (availableMembers.Contains(oldest))
+                {
+                    return unreachableMembers;
+                }
+                else
+                {
+                    return members;
+                }
+            }
+
             return availableCount < unreachableCount
                 //too few available, down our partition (entire members)
                 ? members
