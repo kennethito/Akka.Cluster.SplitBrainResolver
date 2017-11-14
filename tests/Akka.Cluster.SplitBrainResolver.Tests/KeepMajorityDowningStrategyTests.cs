@@ -115,5 +115,60 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
             victims.All(v => v.HasRole(roleName))
                 .Should().BeTrue("We should only down members in the specified role");
         }
+
+        [Fact]
+        public void ShouldDownPartitionWithoutOldestWhenEqualMembers()
+        {
+            var oldest = TestUtils.CreateMembers(MemberStatus.Up).First();
+            
+            var members = TestUtils.CreateMembers(MemberStatus.Up)
+                .Take(5)
+                .ToImmutableSortedSet()
+                .Add(oldest);
+
+            //Oldest is in unreachableMembers
+            var unreachableMembers = members
+                .Where(m => !m.Equals(oldest))
+                .Take(2)
+                .ToImmutableHashSet()
+                .Add(oldest);
+
+            var clusterState =
+                new CurrentClusterState().Copy(members: members, unreachable: unreachableMembers);
+
+            var strategy = new KeepMajorityDowningStrategy();
+
+            var victims = strategy.GetVictims(clusterState).ToList();
+
+            victims.ToImmutableSortedSet().SetEquals(members)
+                .Should().BeTrue("Partition without oldest should be marked for downing");
+        }
+
+        [Fact]
+        public void ShouldNotDownPartitionWithOldestWhenEqualMembers()
+        {
+            var oldest = TestUtils.CreateMembers(MemberStatus.Up).First();
+
+            //Oldest is in the reachable members
+            var members = TestUtils.CreateMembers(MemberStatus.Up)
+                .Take(5)
+                .ToImmutableSortedSet()
+                .Add(oldest);
+
+            var unreachableMembers = members
+                .Where(m => !m.Equals(oldest))
+                .Take(3)
+                .ToImmutableHashSet();
+
+            var clusterState =
+                new CurrentClusterState().Copy(members: members, unreachable: unreachableMembers);
+
+            var strategy = new KeepMajorityDowningStrategy();
+
+            var victims = strategy.GetVictims(clusterState).ToList();
+
+            victims.ToImmutableSortedSet().SetEquals(unreachableMembers)
+                .Should().BeTrue("Partition with oldest should not be marked for downing");
+        }
     }
 }

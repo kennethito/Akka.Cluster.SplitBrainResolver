@@ -35,7 +35,7 @@ Configure the downing provider class and split-brain-resolver section similar to
             cluster {
                 auto-down-unreachable-after = off
 
-                downing-provider-class = "Akka.Cluster.SplitBrainResolver.SplitBrainDowningProvider, Akka.Cluster.SplitBrainResolver"
+                downing-provider-class = "Akka.Cluster.SplitBrainResolver.SplitBrainResolverDowningProvider, Akka.Cluster.SplitBrainResolver"
 
                 split-brain-resolver {
                     # Enable one of the available strategies (see descriptions below):
