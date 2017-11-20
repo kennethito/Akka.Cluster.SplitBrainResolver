@@ -11,9 +11,20 @@ namespace Akka.Cluster.SplitBrainResolver
     {
         protected ActorSystem System { get; private set; }
 
-        public StrategizedDowningProvider(ActorSystem system)
+        private readonly string rootConfigElement;
+
+        /// <summary>
+        /// Creates a StrategizedDowningProvider
+        /// </summary>
+        /// <param name="system">The actor system</param>
+        /// <param name="rootConfigElement">
+        /// The configuration element to be used with this StrategizedDowningProvider.
+        /// $"akka.cluster.{rootConfigElement}"
+        /// </param>
+        public StrategizedDowningProvider(ActorSystem system, string rootConfigElement)
         {
             System = system;
+            this.rootConfigElement = rootConfigElement;
         }
 
         /// <summary>
@@ -28,7 +39,7 @@ namespace Akka.Cluster.SplitBrainResolver
         /// </summary>
         public virtual TimeSpan DownRemovalMargin =>
             System.Settings.Config.GetTimeSpan(
-                "akka.cluster.split-brain-resolver.down-removal-margin",
+                $"akka.cluster.{this.rootConfigElement}.down-removal-margin",
                 @default: TimeSpan.FromSeconds(10));
 
         /// <summary>
@@ -56,7 +67,7 @@ namespace Akka.Cluster.SplitBrainResolver
         /// </summary>
         protected virtual TimeSpan StableAfter => 
             System.Settings.Config.GetTimeSpan(
-                "akka.cluster.split-brain-resolver.stable-after",
+                $"akka.cluster.{this.rootConfigElement}.stable-after",
                 @default: TimeSpan.FromSeconds(10));
     }
 }

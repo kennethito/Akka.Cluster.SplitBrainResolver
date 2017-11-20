@@ -8,7 +8,7 @@ namespace Akka.Cluster.SplitBrainResolver
     public class SplitBrainResolverDowningProvider : StrategizedDowningProvider
     {
         public SplitBrainResolverDowningProvider(ActorSystem system)
-            : base(system)
+            : base(system, "split-brain-resolver")
         {
 
         }
@@ -40,7 +40,7 @@ namespace Akka.Cluster.SplitBrainResolver
                     strategy = new NoopDowningStrategy();
                     break;
                 default:
-                    throw new NotSupportedException($"Currently only 'static-quorum' and 'off' are supported");
+                    throw new NotSupportedException($"Unknown downing strategy requested");
             }
 
             return strategy;

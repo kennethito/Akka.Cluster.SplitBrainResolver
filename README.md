@@ -20,6 +20,9 @@ Currently only the JVM Split Brain Resolvers are implemented.
 
 In the future, further downing strategies will be provided.
 
+You can also create your own downing providers.
+* [Custom Downing Providers Documentation](https://github.com/kennethito/Akka.Cluster.SplitBrainResolver/blob/dev/docs/custom-downing-providers.md)
+
 ## Configuration
 
 Configure the downing provider class and split-brain-resolver section similar to below
@@ -102,4 +105,4 @@ Pre-requsites
 Building via dotnet has several alternatives
 
 * dotnet build from the repository root
-* build.ps1 from the repository root (used via CI)
+* build.ps1 from the repository root (used via CI) 
