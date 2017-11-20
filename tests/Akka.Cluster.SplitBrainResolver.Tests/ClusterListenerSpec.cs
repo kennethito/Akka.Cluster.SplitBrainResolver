@@ -77,7 +77,7 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
     public class ClusterListenerDowningProvider : StrategizedDowningProvider
     {
         public ClusterListenerDowningProvider(ActorSystem system)
-            : base(system)
+            : base(system, "split-brain-resolver")
         {
 
         }
