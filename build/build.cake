@@ -2,7 +2,7 @@ var target = Argument("target", "Build");
 var configuration = Argument("configuration", "Release");
 
 var nugetApiKey = EnvironmentVariable("NUGET_API_KEY");
-var version = EnvironmentVariable("version") ?? "0.0.1";
+var version = EnvironmentVariable("version") ?? "0.0.0";
 var build = EnvironmentVariable("build") ?? "1";
 
 var fullVersion = $"{version}.{build}";
