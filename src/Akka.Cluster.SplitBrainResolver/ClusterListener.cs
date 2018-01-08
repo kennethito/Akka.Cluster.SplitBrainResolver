@@ -17,7 +17,7 @@ namespace Akka.Cluster.SplitBrainResolver
         private readonly TimeSpan stableAfter;
         private readonly IDowningStrategy downingStrategy;
 
-        private readonly ILoggingAdapter log = Logging.GetLogger(Context);
+        private readonly ILoggingAdapter log = Context.GetLogger();
 
         public IStash Stash { get; set; }
 
@@ -43,7 +43,7 @@ namespace Akka.Cluster.SplitBrainResolver
             {
                 Stash.Stash();
                 Become(() => WaitingForStability(clusterState));
-                Stash.Unstash();
+                Stash.UnstashAll();
             });
 
             if (clusterState.Leader != null && clusterState.Leader.Equals(cluster.SelfAddress))

@@ -10,8 +10,8 @@ namespace Akka.Cluster.SplitBrainResolver
     {
         private static bool ShouldConsider(Member member, string role = null) => 
             string.IsNullOrWhiteSpace(role) 
-                ? member.Status == MemberStatus.Up
-                : member.Status == MemberStatus.Up && member.HasRole(role);
+                ? member.Status > MemberStatus.Joining
+                : member.Status > MemberStatus.Joining && member.HasRole(role);
 
         public static bool HasAvailableMember(this CurrentClusterState state, Address address)
         {
