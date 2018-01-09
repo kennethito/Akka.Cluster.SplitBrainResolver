@@ -95,7 +95,9 @@ namespace Akka.Cluster.SplitBrainResolver
                         newState = clusterState.Copy(roleLeaderMap: roleLeaders.SetItem(changed.Role, changed.Leader));
                         break;
                     case MemberRemoved member:
-                        newState = clusterState.Copy(members: clusterState.Members.Remove(member.Member));
+                        newState = clusterState.Copy(
+                                        members: clusterState.Members.Remove(member.Member),
+                                        unreachable: clusterState.Unreachable.Remove(member.Member));
                         break;
                     case MemberUp member:
                         newState = clusterState.Copy(members: clusterState.Members.Add(member.Member));
