@@ -8,8 +8,15 @@ namespace Akka.Cluster.SplitBrainResolver
 {
     internal static class CurrentClusterStateExtensions
     {
+        //For most things including availability, we only want to consider up members as available
         private static bool ShouldConsider(Member member, string role = null) => 
             string.IsNullOrWhiteSpace(role) 
+                ? member.Status == MemberStatus.Up
+                : member.Status == MemberStatus.Up && member.HasRole(role);
+
+        //We need to be able to down everything except joining nodes
+        private static bool ShouldConsiderForUnreachable(Member member, string role = null) =>
+            string.IsNullOrWhiteSpace(role)
                 ? member.Status > MemberStatus.Joining
                 : member.Status > MemberStatus.Joining && member.HasRole(role);
 
@@ -34,7 +41,7 @@ namespace Akka.Cluster.SplitBrainResolver
 
         public static ImmutableHashSet<Member> GetUnreachableMembers(this CurrentClusterState state, string role = null)
         {
-            bool ShouldConsider(Member member) => CurrentClusterStateExtensions.ShouldConsider(member, role);
+            bool ShouldConsider(Member member) => CurrentClusterStateExtensions.ShouldConsiderForUnreachable(member, role);
 
             return state.Unreachable.Where(ShouldConsider)
                 .ToImmutableHashSet();
