@@ -35,7 +35,7 @@ namespace Akka.Cluster.SplitBrainResolver
         {
             var oldest = clusterState.GetMembers(Role).SortByAge().FirstOrDefault();
             var available = clusterState.GetAvailableMembers(Role);
-            var haveOldest = available.Contains(oldest);
+            var haveOldest = oldest != null && available.Contains(oldest);
             var oldestIsAlone =
                 (haveOldest && available.Count == 1)
                 || (!haveOldest && available.Count == clusterState.GetMembers(Role).Count - 1);

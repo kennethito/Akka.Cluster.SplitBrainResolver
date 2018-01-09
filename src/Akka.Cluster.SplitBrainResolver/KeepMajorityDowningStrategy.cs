@@ -40,7 +40,7 @@ namespace Akka.Cluster.SplitBrainResolver
             if (availableCount == unreachableCount)
             {
                 var oldest = clusterState.GetMembers(Role).SortByAge().FirstOrDefault();
-                if (availableMembers.Contains(oldest))
+                if (oldest != null && availableMembers.Contains(oldest))
                 {
                     return unreachableMembers;
                 }
