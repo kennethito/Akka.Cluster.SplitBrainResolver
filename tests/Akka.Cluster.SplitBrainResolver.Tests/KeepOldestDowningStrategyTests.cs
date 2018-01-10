@@ -90,7 +90,7 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
         }
 
         [Fact]
-        public void ShouldDownRemoteOldestWhenOldestAndAlong()
+        public void ShouldDownRemoteOldestWhenOldestAndAlone()
         {
             var oldest = TestUtils.CreateMembers(MemberStatus.Up).First();
 
@@ -108,6 +108,30 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
 
             victims.ToImmutableHashSet().SetEquals(ImmutableHashSet<Member>.Empty.Add(oldest))
                 .Should().BeTrue("When downIfAlone=true, we should down the oldest member if its clustered by itself");
+        }
+
+        [Fact]
+        public void ShouldDownUnreachableWhenNoOldest()
+        {
+            var oldest = TestUtils.CreateMembers(MemberStatus.Up)
+                .Take(3)
+                .ToImmutableSortedSet();
+
+            var members = TestUtils.CreateMembers(MemberStatus.Up)
+                .Take(5)
+                .ToImmutableSortedSet();
+
+            var unreachable = members.Take(2).ToImmutableHashSet();
+
+            var state = new CurrentClusterState().Copy(members, unreachable);
+
+            //There will be no oldest when constrained to this role
+            var strategy = new KeepOldestDowningStrategy(role: "SomeRole");
+
+            var victims = strategy.GetVictims(state);
+
+            victims.ToImmutableHashSet().SetEquals(unreachable)
+                .Should().BeTrue("When there isn't an oldest node, the unreachable nodes should be downed");
         }
     }
 }
