@@ -54,9 +54,9 @@ namespace Akka.Cluster.SplitBrainResolver
 
             return availableCount < QuorumSize
                 //too few available, down our partition
-                ? members
+                ? clusterState.GetMembers()
                 //enough available, down unreachable
-                : unreachable;
+                : clusterState.GetUnreachableMembers();
         }
     }
 }

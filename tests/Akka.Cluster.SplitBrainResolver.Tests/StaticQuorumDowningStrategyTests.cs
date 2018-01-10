@@ -62,11 +62,8 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
             var strategy = new StaticQuorumDowningStrategy(quorumSize: 3, role: roleName);
             var victims = strategy.GetVictims(clusterState);
 
-            victims.ToImmutableHashSet().SetEquals(membersInRole.ToImmutableHashSet())
+            victims.ToImmutableHashSet().SetEquals(members)
                 .Should().BeTrue("Partitions with fewer than the quorum size should be marked for downing");
-
-            victims.All(v => v.HasRole(roleName))
-                .Should().BeTrue("We should only down members in the specified role");
         }
 
         [Fact]

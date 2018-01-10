@@ -47,8 +47,8 @@ namespace Akka.Cluster.SplitBrainResolver
                 return new List<Member> { oldest };
 
             return haveOldest
-                ? clusterState.GetUnreachableMembers(Role)
-                : clusterState.GetMembers(Role);
+                ? clusterState.GetUnreachableMembers()
+                : clusterState.GetMembers();
         }
     }
 }
