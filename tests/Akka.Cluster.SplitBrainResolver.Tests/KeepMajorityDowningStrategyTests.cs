@@ -81,11 +81,8 @@ namespace Akka.Cluster.SplitBrainResolver.Tests
 
             var victims = strategy.GetVictims(clusterState).ToList();
 
-            victims.ToImmutableHashSet().SetEquals(membersInRole)
+            victims.ToImmutableHashSet().SetEquals(members)
                 .Should().BeTrue("Minority partitions should be marked for downing");
-
-            victims.All(v => v.HasRole(roleName))
-                .Should().BeTrue("We should only down members in the specified role");
         }
 
         [Fact]
