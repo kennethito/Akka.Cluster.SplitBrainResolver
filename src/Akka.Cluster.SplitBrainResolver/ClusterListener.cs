@@ -52,7 +52,7 @@ namespace Akka.Cluster.SplitBrainResolver
 
                 foreach (var victim in downingStrategy.GetVictims(clusterState))
                 {
-                    log.Info($"Downing victim {victim}");
+                    log.Warning($"Downing victim {victim}");
                     cluster.Down(victim.Address);
                 }
             }
