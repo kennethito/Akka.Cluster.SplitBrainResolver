@@ -60,7 +60,7 @@ namespace Akka.Cluster.SplitBrainResolver
 
         private void WaitingForStability(CurrentClusterState clusterState)
         {
-            log.Info($"Waiting {stableAfter.TotalSeconds} seconds for cluster stability");
+            log.Debug($"Waiting {stableAfter.TotalSeconds} seconds for cluster stability");
 
             var timeoutHandle = 
                 Context.System.Scheduler.ScheduleTellOnceCancelable(
