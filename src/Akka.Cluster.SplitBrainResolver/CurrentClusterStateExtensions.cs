@@ -14,11 +14,11 @@ namespace Akka.Cluster.SplitBrainResolver
                 ? member.Status == MemberStatus.Up
                 : member.Status == MemberStatus.Up && member.HasRole(role);
 
-        //We need to be able to down everything except joining nodes
+        //We need to be able to down everything including joining nodes
         private static bool ShouldConsiderForUnreachable(Member member, string role = null) =>
             string.IsNullOrWhiteSpace(role)
-                ? member.Status > MemberStatus.Joining
-                : member.Status > MemberStatus.Joining && member.HasRole(role);
+                ? true
+                : member.HasRole(role);
 
         public static bool HasAvailableMember(this CurrentClusterState state, Address address)
         {
