@@ -4,8 +4,8 @@ version: 0.0.3.{build}
 
 environment:
   NUGET_API_KEY:
-    secure: Xgfg93dEsB7PeszT3oyiQNkB8gLvYTzREf859tknmjkVm9IvsVu75kMpVLm6fYfr
-
+    secure: BaA4I0ILBg+7FdZ2TEdgwuu8oQ8l9Yp7yqhyw2yRiyGnQnP2sjUYPnC0zDV/nyFh
+    
 build:
   verbosity: minimal
 
